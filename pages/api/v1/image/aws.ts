@@ -9,6 +9,7 @@ import {
 } from '@utils/aws';
 import sha256 from 'sha256';
 import { v4 as uuidv4 } from 'uuid';
+import handleImage from '@utils/handleImage';
 
 const handler: (
   req: NextApiRequest,
@@ -36,27 +37,11 @@ const handler: (
 
     const { Body: buffer } = await getObjectByKey(key);
 
-    const filename = sha256(uuidv4());
-
-    const original = sharp(buffer)
-      .clone()
-      .flatten({ background: { r: 255, g: 255, b: 255, alpha: 1 } })
-      .resize({
-        fit: 'contain',
-        width: 800,
-        withoutEnlargement: true,
-      })
-      .jpeg({ quality: 40, chromaSubsampling: '4:4:4' })
-      .withMetadata();
-
-    await uploadS3({
-      buffer: await original.toBuffer(),
-      key: `images/target/${filename}.jpg`,
+    const { url } = await handleImage({
+      input: buffer,
+      basePath: `images/target/`,
     });
 
-    const url = `${process.env.CLOUDFRONT_URL}/images/target/${filename}.jpg`;
-
-    console.log('aws', url);
     return res.status(201).json({
       url,
     });
