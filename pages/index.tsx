@@ -43,7 +43,9 @@ const IndexPage = () => {
   const handleGetMdText = React.useCallback(async (url: string) => {
     setLoading(true);
 
-    setMdText(await getMdFile(url));
+    const md = await getMdFile(url);
+
+    setMdText(marked(md.split('\n').join('<br />')));
 
     setLoading(false);
   }, []);
@@ -87,11 +89,14 @@ const IndexPage = () => {
       {mdUrl && (
         <p className="text-md font-semibold mt-4">MD File URL: {mdUrl}</p>
       )}
-
       {mdText && (
-        <div className="flex mt-4">
+        <div className="flex mt-4 pb-20">
           <div className="text-md font-semibold">MD File Result:&nbsp;</div>
-          <div dangerouslySetInnerHTML={{ __html: marked(mdText) }} />
+          <div
+            dangerouslySetInnerHTML={{
+              __html: mdText,
+            }}
+          />
         </div>
       )}
     </div>
