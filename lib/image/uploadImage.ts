@@ -1,8 +1,11 @@
 import uploadAWSImage from './uploadAWSImage';
 
-const uploadImage: (data: ArrayBuffer) => Promise<string> = async (data) => {
+const uploadImage: (
+  file: File | string,
+  isMd?: boolean,
+) => Promise<string> = async (file, isMd = false) => {
   try {
-    return await uploadAWSImage(data);
+    return await uploadAWSImage(file, isMd);
   } catch (err) {
     if (process.env.NODE_ENV === 'development') {
       console.log('[uploadImage] error', err);

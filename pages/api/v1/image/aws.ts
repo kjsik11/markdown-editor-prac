@@ -21,7 +21,7 @@ const handler: (
     if (!ext) return throwError(res, 2, 400);
 
     const data = await getUploadUrl({
-      basePath: 'images/target/',
+      basePath: `${ext === 'md' ? 'markdown/' : 'images/target/'}`,
       ext: ext as string,
     });
 
@@ -29,7 +29,7 @@ const handler: (
   }
 
   if (req.method === 'POST') {
-    const { key } = req.body;
+    const { key, isMd } = req.body;
 
     if (!key) return throwError(res, 2, 400);
 
@@ -39,7 +39,7 @@ const handler: (
 
     const { url } = await handleImage({
       input: buffer,
-      basePath: `images/target/`,
+      basePath: `${isMd ? 'markdown' : 'images/target'}`,
     });
 
     return res.status(201).json({

@@ -1,17 +1,19 @@
 import fetcher from '@lib/fetcher';
 import uploadImageFile from '@lib/aws/uploadImageFile';
 
-const uploadAWSImage: (data: ArrayBuffer) => Promise<string> = async (data) => {
+const uploadAWSImage: (
+  file: File | string,
+  isMd?: boolean,
+) => Promise<string> = async (file, isMd = false) => {
   try {
-    const { key } = await uploadImageFile(data);
+    const { key } = await uploadImageFile(file, isMd);
 
-    console.log(data);
     const { url } = await fetcher('/api/v1/image/aws', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ key }),
+      body: JSON.stringify({ key, isMd }),
     });
     console.log('uploadawsimawge', url);
 

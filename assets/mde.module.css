@@ -1,3 +1,7 @@
 .root :global .mde-tabs button {
   @apply px-2;
 }
+
+/* .root :global .mde-preview-content img {
+  @apply w-80;
+} */

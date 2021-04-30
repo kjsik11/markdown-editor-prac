@@ -1,9 +1,12 @@
 import fetcher from '@lib/fetcher';
 
-const uploadImageFile: (data: ArrayBuffer) => Promise<{ key: string }> = async (
-  file,
-) => {
-  const { url, fields } = await fetcher(`/api/v1/image/aws?ext=jpg`);
+const uploadImageFile: (
+  file: File | string,
+  isMd?: boolean,
+) => Promise<{ key: string }> = async (file, isMd = false) => {
+  const { url, fields } = await fetcher(
+    `/api/v1/image/aws?ext=${isMd ? 'md' : 'jpg'}`,
+  );
 
   const formData = new FormData();
 
